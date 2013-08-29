@@ -124,6 +124,62 @@ def recursive_count(n, s)
   return result
 end
 
-1.upto(1000) do |n|
-  puts "#{n}: #{recursive_count(n,n)}"
+# An iterative implementation can do it in O(N^2) space and O(N^3) time.
+# This actually answers all O(N^2) problems up to count(n,s) so, amortized,
+# it's more like O(N) on average.
+def iterative_count(n, s)
+  # Create an (N+1) x (S+1) table.
+  table = Array.new( n+1 ) { Array.new( s+1 ) }
+
+  # Base case S=0.
+  0.upto(n) do |x|
+    table[x][0] = factorial(x)
+  end
+
+  # Base case N=0.
+  table[0][0] = 0
+  table[0][1] = 0
+  1.upto(s) { |x| table[0][x] = 'X' }
+  # Base case N=1.
+  table[1][0] = 1
+  table[1][1] = 0
+  2.upto(s) { |x| table[1][x] = 'X' }
+
+  # 'Recursive' cases.
+  1.upto(s) do |ss|
+    2.upto(n) do |nn|
+      if ss > nn
+        table[nn][ss] = 'X'
+      else
+        if ss <= nn-1
+          table[nn][ss] = 0
+          0.upto(ss) do |i|
+            table[nn][ss] +=  choose(ss,i) *
+                              choose(nn-ss, nn-1-i) *
+                              table[nn-1][i] *
+                              table[1][0]
+          end
+        else
+          table[nn][ss] = table[nn-1][nn-1-1] * table[1][0] * (nn-1)
+        end
+      end
+    end
+  end
+
+  # Print a table fror small inputs.
+  if n <= 9
+    puts "Going Down: S. Going Across: N"
+    print "-" * 80 + "\n"
+    table.transpose.each do |row|
+      row.each do |col|
+        print "%8s" % col
+      end
+      print "\n"
+    end
+    print "-" * 80 + "\n"
+  end
+
+  return table[n][s]
 end
+
+puts iterative_count(9,9)
