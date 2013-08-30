@@ -81,8 +81,8 @@ def recursive_count(n, s)
   # boxes which have a same-numbered ball into the first group.
   # 
   # So, if s <= n-1, then all of the boxes with same-numbered balls go into the
-  # first group. If s = n-1, then both groups are filled with boxes having
-  # a same-numbered ball.
+  # first group. If s = n, then both groups are filled with boxes having a
+  # same-numbered ball.
   #
   # Note: It may be possible to get a better running time by splitting the boxes
   # into more evenly-sized groups, but this is more complicated.
