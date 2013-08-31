@@ -217,6 +217,24 @@ def special_count(n)
     return $special_memo[n] if $special_memo[n]
     return $special_memo[n] = (n-1) * (special_count(n-1) + special_count(n-2))
   end
+
+  # How this was found:
+  # Notice that when we make a table of values with S going down, N going
+  # across, we care about the values on the diagonal. Also, we see that, to
+  # compute a diagonal value, we only need the one that's above the previous
+  # diagonal. To compute the one above the diagonal, we need the previous
+  # diagonal and the one above it.
+  #
+  # Let (x_i, y_i) be a pair where y_i is the ith diagonal and x_i is the one
+  # above the ith diagonal. The base case tells us that (x_1, y_1) = (1, 0).
+  # Use the recurrence to get the equation:
+  #    (1) x_i = y_{i-1} + (i-1)x_{i-1}
+  #    (2) y_i = (i-1)x_{i-1}
+  # The last term in (1) is y_i so we substitute:
+  #    (3) x_i = y_{i-1} + y_{i}
+  # Then substitute x_{i-1} in (2) according to (3):
+  #    (4) y_i = (i-1)(y_{i-2} + y_{i-1})
+  # ...which is the result.
 end
 
 1.upto(100) do |i|
