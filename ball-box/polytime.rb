@@ -205,6 +205,20 @@ def iterative_count(n, s)
   return table[n][s]
 end
 
+# A solution to the more-specific problem, where there are N boxes and N balls,
+# each box is numbered 1 though N, and each ball is numbered 1 through N.
+def special_count(n)
+  $special_memo ||= Hash.new
+  if n == 1
+    return 0
+  elsif n == 2
+      return 1
+  else
+    return $special_memo[n] if $special_memo[n]
+    return $special_memo[n] = (n-1) * (special_count(n-1) + special_count(n-2))
+  end
+end
+
 1.upto(100) do |i|
-  puts iterative_count(i,i)
+  puts special_count(i)
 end
