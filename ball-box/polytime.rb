@@ -36,6 +36,18 @@ def factorial(n)
 end
 
 def choose(n,k)
+  # I'm too lazy to figure out how to implement choose properly for negative
+  # arguments, but the only one we need is n=0,k=-1, which is zero.
+  # There is a more complete definition here if you feel like implementing it:
+  # http://mathworld.wolfram.com/BinomialCoefficient.html
+  if n == 0 && k == -1
+    return 0
+  end
+
+  if n < 0 || k < 0
+    raise "ERROR: negative choose args."
+  end
+
   if k > n
     return 0
   else
@@ -87,7 +99,9 @@ def recursive_count(n, s)
   # Note: It may be possible to get a better running time by splitting the boxes
   # into more evenly-sized groups, but this is more complicated.
 
+  # sg is the number of boxes in the second group.
   sg = 1
+  # fg is the number of boxes in the first group.
   fg = n - sg
 
   # We count the number of solutions as follows:
@@ -105,19 +119,34 @@ def recursive_count(n, s)
   # second group the ball which matches its box, so we add up all the
   # combinations we get by swapping the ith box's ball with the second group's
   # box's ball.
+  #
+  # The solution is quite a bit simpler when we realize that we can either put
+  # the second group's box's ball in the second group or not. 
+  #
+  # If s=n:
+  #   - We CAN NOT put the second group's box's ball in the second group.
+  #   - There are n-1 other balls that can be put in the second group.
+  # If s<n:
+  #   - We CAN put the second group's box's ball in the second group.
+  #   - If we do, it MUST be a ball matching one of the boxes in the first
+  #     group, so there are S ways of doing it.
 
   result = 0
-  if s <= fg
-    0.upto(s) do |i|
-      # i same-numbered balls into the first group
-      result += choose(s,i) * # from S that could be the same, choose i
-                choose(n-s, fg-i) * # choose the remaining fg-i from non-same balls
-                recursive_count(fg, i) *
-                recursive_count(sg, 0)
-    end
+  if s < n
+    result += recursive_count(n-1, s) + s * recursive_count(n-1, s-1)
   else
-    result = recursive_count(fg, fg-1) * recursive_count(sg, 0) * fg
+    result += (n-1) * recursive_count(n-1, n-2)
   end
+
+  # Some intermediate stages of work:
+  #result += [s,n-1].min*recursive_count(n-1, [s,n-1].min-1)
+  #result += recursive_count(n-1, [s,n-1].min) * recursive_count(1, s-[s,n-1].min)
+  # ([s,fg].min-1).upto([s,fg].min) do |i|
+  #   # second group's box's pair is used as filling for group one
+  #   result += choose([s,fg].min, i) * choose(n-1-[s,fg].min, fg-i-1) * recursive_count(fg, i) * recursive_count(sg, 0)
+  #   # second group's box's pair is NOT used as filling for group one
+  #   result += choose([s,fg].min, i) * choose(n-1-[s,fg].min, fg-i) * recursive_count(fg, i) * recursive_count(sg, s - [s,n-1].min)
+  # end
 
   $count_memo[[n,s]] = result
 
@@ -182,4 +211,6 @@ def iterative_count(n, s)
   return table[n][s]
 end
 
-puts iterative_count(9,9)
+1.upto(100) do |i|
+  puts recursive_count(i,i)
+end
