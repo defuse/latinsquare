@@ -181,15 +181,9 @@ def iterative_count(n, s)
         table[nn][ss] = 'X'
       else
         if ss <= nn-1
-          table[nn][ss] = 0
-          0.upto(ss) do |i|
-            table[nn][ss] +=  choose(ss,i) *
-                              choose(nn-ss, nn-1-i) *
-                              table[nn-1][i] *
-                              table[1][0]
-          end
+          table[nn][ss] = table[nn-1][ss] + ss*table[nn-1][ss-1]
         else
-          table[nn][ss] = table[nn-1][nn-1-1] * table[1][0] * (nn-1)
+          table[nn][ss] = (nn-1) * table[nn-1][nn-1-1] 
         end
       end
     end
@@ -212,5 +206,5 @@ def iterative_count(n, s)
 end
 
 1.upto(100) do |i|
-  puts recursive_count(i,i)
+  puts iterative_count(i,i)
 end
