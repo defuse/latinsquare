@@ -1,0 +1,234 @@
+<HTML>
+<HEAD>
+<TITLE>Derangements and Generalizations</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+Retrieved from: http://www.mathpages.com/home/kmath430.htm
+</PRE>
+<H2>Derangements and Generalizations</H2>
+<pre>
+Given any sequence of n distinct objects, in how many ways can those
+objects be rearranged so that none of the objects is in its original 
+position?  This is known as the number of "derangements" of n, 
+denoted by D(n).  Obviously D(1)=0 and D(2)=1.  
+
+One way (not the most efficient) of determining the value of D(n) for 
+any given n is by means of the inclusion/exclusion principle.  For 
+example, with n=5 we begin with 5! possible re-arrangements, but of 
+those we know that 4! leave the first object unmoved, and 4! leave 
+the 2nd object unmoved, and so on.  Thus there are 5*4! that leave 
+one specific object unmoved, so we have to subtract this number.  
+However, in doing so we have subtracted some of the arrangements 
+twice, because some of them leave both the 1st AND the 2nd element 
+unchanged (for example).  So we need to add back the number of 
+arrangements that leave any two of the objects unmoved, of which 
+there are C(5,2)*3!.  But then we need to subtract the number of 
+arrangements that leave THREE objects unmoved, and so on.  The 
+final result is
+
+       D(5) = 1*5! - 5*4! + 10*3! - 10*2! + 5*1! - 1*0!
+
+            = 44
+
+In general we have
+
+                  n      j  / n \
+       D(n)  =  SUM  (-1)  (     ) (n-j)!
+                 j=0        \ j /
+
+If we examine the effect of multiplying each term of this sum by n+1, 
+we see that the value of D(n) can easily be computed from the value 
+of D(n-1) by the simple recurrence formula
+
+              D(n) = n D(n-1) + (-1)^n
+
+The first several values of D(n) for n=1,2,3,... are
+
+          0, 1, 2, 9, 44, 265, 1854, 14833, ...
+
+The Encyclopedia of Integer Sequences (Sloane & Plouffe) lists the 
+values up to D(17), and also notes the exponential generating function
+
+              1          inf      x^n
+          ---------  =  SUM  D(n) ---
+          (1-x) e^x      n=0       n!
+
+Now suppose that, instead of being given just a single arrangement 
+of objects, we specify TWO arrangements (not necessarily distinct), 
+and consider the number of permutations that have no object in the 
+same position as it occupies in EITHER of the two given arrangements.
+
+In this case the number clearly depends on the relation between the 
+two given arrangements.  If they are the same, then the number of 
+derangements is simply D(n), just as before.  On the other hand, 
+if the two given arrangements are some non-trivial permutation of 
+each other, the number of derangements relative to both of them is 
+less.
+
+The permutation represented by going from the 1st given arrangement 
+to the 2nd can be expressed in terms of its cyclic components.  For 
+example, with n=5 objects there are seven possible cyclic structures, 
+corresponding to the seven partitions of 5.  The identity permutation 
+consists of five cycles of length 1, denoted by [1][1][1][1][1], and
+in this case there are D(5)=44 derangements relative to any pair of 
+arrangements that are related by the identity permutation.  Also, note 
+that for any given 1st arrangement there is only one 2nd arrangement 
+that is related in this way.  On the other hand, for any given 1st 
+arrangement there are 10 distinct 2nd arrangements related to it 
+according to a permutation with the cyclic structure [1][1][1][2],
+and in these cases there are only 24 derangements relative to both 
+of the given arrangements.
+
+The complete list of possibilities for derangements relative to TWO 
+given arrangements of n objects for n=3,4,5 and 6 are listed below:
+
+
+n=3:
+                    Number of         Number of 
+  Relation between  distinct 2nd      derangements
+  the two given     arrangements      relative to 
+  arrangements      for any given     both given
+                    1st arrangement   arrangements  Product
+                    ---------------   ------------  -------
+    [1][1][1]          1                  2            2
+    [1][2]             2                  1            2
+    [3]                3                  0            0
+                                                      ----
+                                                       4 = 2^2
+
+n=4:
+                     # of       # of two-fold
+                     pairs      derangements    product
+                    ------      ------------    -------
+    [1][1][1][1]       1            9              9
+    [1][1][2]          6            4             24
+    [2][2]             3            4             12
+    [1][3]             8            3             24
+    [4]                6            2             12
+                                                ----
+                                                  81 = 9^2
+
+n=5
+                      # of       # of two-fold
+                      pairs      derangements      product
+                    ----------   -------------    ----------
+  [1][1][1][1][1]        1             44              44
+  [1][1][1][2]          10             24             240
+  [1][1][3]             20             19             380
+  [1][2][2]             15             16             240
+  [1][4]                30             16             480
+  [2][3]                20             12             240
+  [5]                   24             13             312
+                                                    ------
+                                            Total    1936 = 44^2
+
+
+n=6:
+                         # of     # of two-fold
+                         pairs    derangements  product
+                        ------    ------------  -------
+  [1][1][1][1][1][1]       1          265         265          
+  [1][1][1][1][2]         15          168        2520
+  [1][1][2][2]            45          116        5220
+  [1][1][1][3]            40          137        5480
+  [2][2][2]               15           80        1200
+  [1][2][3]              120           96       11520
+  [1][1][4]               90          114       10260
+  [3][3]                  40           82        3280
+  [2][4]                  90           80        7200
+  [1][5]                 144           95       13680
+  [6]                    120           80        9600
+                                                -----
+                                                70225 = 265^2
+
+Of course the numbers in the second column are just the multinomial 
+coefficients related to the corresponding partition.  (These are called 
+M_2 in Abramowitz and Stegun.)  
+
+Notice that the sum of the "products" in each table is the square of 
+D(n).  This sum represents the number of all possible two-fold
+derangements, with no restriction on the relation between the two
+"given" arrangements.  Therefore, up to permutation of the identities 
+of the n objects, we can fix the "derangement" X, and then construct 
+any two "prior" arrangements, which are only required to be 
+derangements of X.  Each has a choice of D(n) arrangements, so
+the number of possible combinations of two "priors" is D(n)^2.
+
+So, if Q(n,j) denotes the number of two-fold derangements of n objects 
+relative to TWO given arrangements whose cyclic structure corresponds 
+to the jth partition of n, then we have the identity
+
+              SUM  M_2(j) Q(n,j)   =   D(n)^2
+               j
+
+To summarize, the basic definition of an ordinary derangement can be 
+expressed in terms of constructs of the form
+
+            /   p1[1,2,..,n]      \
+            \   de[1,2,..,n/p1]   /
+
+where p1[1,2,..,n] signifies an arbitrary arrangement of the numbers 
+1 through n and de[1,2,..,n/p1] signifies a derangement relative to p1, 
+and there are essentially D(n) distinct constructs of this kind (up to 
+permutation of the elements, i.e., we can always label the objects so 
+that p1 is the identity permutation).  In addition, we've seen that if 
+we define "two-fold derangements" as constructs of the form
+
+          /   p1[1,2,..,n]         \
+         |    p2[1,2,..,n]          |
+          \   de[1,2,..,n/p1,p2]   /
+
+where p1 and p2 are arbitrary arrangements and de[1,2,..,n/p1,p2] is a 
+derangement relative to both p1 and p2, we find the number of distinct 
+such constructs (up to labelling of the objects) is D(n)^2.
+            
+Obviously this generalize to higher orders.  For example, if we consider 
+THREE-fold derangements of n objects relative to three given arrangements, 
+represented by constructs of the form
+
+          /   p1[1,2,..,n]           \
+         |    p2[1,2,..,n]            |
+         |    p3[1,2,..,n]            |
+          \   de[1,2,..,n/p1,p2,p3]  /
+
+the total number of distinct constructs of this kind equals D(n)^3.
+
+
+We can also consider constructs consisting of k>2 strings that are
+pairwise derangements of each other.  There is only one set of
+3 pairwise derangements of 3 objects:
+
+               {0 1 2}
+               {1 2 0}
+               {2 0 1}
+
+but there are 12 distinct sets of 3 pairwise derangements of 4
+objects, and 276 of 5 objects, and 10640 of 6 obbjects.
+
+
+Another useful generalization is to regard ordinary derangements as
+pairs of strings with the condition that the permutation from one
+to the other contains no cycles of length 1 (i.e., fixed values),
+and then to consider "2nd order derangements" as pairs of strings
+such that the permutation from one to the other contains no cycles
+of length 1 OR 2.  Likewise for higher order.  For n=5 or 6 objects 
+we have the following numbers of derangements of two strings:
+
+     order     n=5       n=6
+     -----     ---       ---
+       1        44       265
+       2        24       160
+       3        24       120
+       4        24       120
+       5         0       120
+       6         0         0
+
+These numbers clearly reflect the possible partitions of n into
+cyclic structure.
+</pre>
+<hr>
+</pre><A HREF="index.htm">Return to MathPages Main Menu</A>
+<hr>
+</BODY>
+</HTML>
